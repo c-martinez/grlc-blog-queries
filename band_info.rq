@@ -1,0 +1,28 @@
+#+ enumerate:
+#+   - genre:
+#+     - http://dbpedia.org/resource/Rock_music
+#+     - http://dbpedia.org/resource/Alternative_rock
+
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?band, ?album, ?hometown, STR(?activeFrom) as ?activeFrom, STR(?activeUntil) as ?activeUntil WHERE {
+  ?band_id rdf:type dbo:Band .
+  ?album_id rdf:type schema:MusicAlbum .
+  ?band_id dbo:genre ?_genre_iri .
+  ?band_id dbo:hometown ?hometown_id .
+  ?album_id dbp:artist ?band_id .
+
+  ?band_id dbp:name ?band .
+  ?band_id dbo:activeYearsStartYear ?activeFrom .	
+  ?band_id dbo:activeYearsEndYear	?activeUntil .
+  ?hometown_id dbp:name ?hometown .
+  ?album_id dbp:name ?album .
+
+  FILTER(LANG(?band) = "en").
+  FILTER(LANG(?album) = "en").
+  FILTER(LANG(?hometown) = "en").
+
+} LIMIT 100
